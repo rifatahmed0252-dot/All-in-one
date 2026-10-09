@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<link rel="manifest" href="manifest.json">
+<title>Thai Glass Calculator</title>
+<style>
+:root{--bg:#061326;--card:#0d2440;--text:#f3f7ff;--muted:#a8bdd7;--primary:#087cff;--primary2:#00b8e6;--border:#183b60;--danger:#ff5e8a;--shadow:0 12px 28px rgba(0,0,0,.22)}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#0b2d54 0%,#061326 48%,#040d1a 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:90px}
+header{padding:22px 18px 12px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:800;font-size:21px}.sub{font-size:12px;color:var(--muted);margin-top:3px}
+.menu{width:42px;height:42px;border:1px solid var(--border);border-radius:14px;background:#102844;color:#fff;box-shadow:var(--shadow);font-size:24px}
+main{padding:8px 16px}.hero{background:linear-gradient(135deg,#0d2d54,#0754a6 58%,#087cff);color:#fff;border:1px solid #1a70b8;border-radius:24px;padding:22px;box-shadow:var(--shadow);margin-bottom:16px}
+.hero h1{font-size:24px;margin:0}.hero p{display:none}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:linear-gradient(145deg,#102c4b,#0a1e35);border:1px solid #19436b;border-radius:18px;padding:16px;box-shadow:var(--shadow)}
+.action{border:1px solid #1a4773;text-align:left;cursor:pointer;min-height:104px;color:var(--text);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;background:linear-gradient(145deg,#12345a,#0a1c32)}.action:active,.btn:active,.menu:active{transform:scale(.975)}.action:hover{border-color:#138cff;box-shadow:0 0 0 1px #138cff33,0 12px 25px #0004}.icon{font-size:27px}.action strong{display:block;margin-top:10px;font-size:15px}.action span{display:none}
+.section-title{font-size:16px;font-weight:800;margin:22px 2px 10px}
+label{font-size:12px;color:var(--muted);font-weight:700;display:block;margin-bottom:7px}.measure{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input,select{width:100%;padding:13px;border:1px solid var(--border);border-radius:12px;font-size:16px;background:#07182b;color:var(--text);outline:none}
+input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(23,105,255,.12)}
+.btn{width:100%;border:0;border-radius:14px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;transition:transform .18s ease,filter .18s ease}.primary{background:linear-gradient(100deg,#087cff,#00a8ff);color:#fff;box-shadow:0 8px 20px #087cff33}.secondary{background:#173758;color:#d7eaff;border:1px solid #24517b}.danger{background:#3a2034;color:#ffb6ca}
+.result{display:none}.total{background:linear-gradient(135deg,#064c53,#087d7d);color:#fff;border:1px solid #159b9b;border-radius:20px;padding:20px;margin-top:14px}.total small{opacity:.8}.total strong{display:block;font-size:30px;margin-top:4px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid var(--border);font-size:13px}.row:last-child{border-bottom:0}.row b{font-size:14px}.pill{font-size:11px;background:#eef3fb;color:#31578e;padding:4px 7px;border-radius:99px}
+.toolbar{display:flex;gap:10px;margin-top:12px}.toolbar .btn{flex:1}
+.back{border:0;background:transparent;padding:8px 0;font-weight:700;color:#55baff;font-size:14px}
+.price-table{width:100%;border-collapse:collapse;font-size:12px}.price-table th,.price-table td{padding:8px 4px;border-bottom:1px solid var(--border);text-align:left}.price-table input{padding:8px;font-size:13px}
+.drawer{position:fixed;inset:0;background:rgba(0,0,0,.55);display:block;z-index:5;opacity:0;visibility:hidden;transition:opacity .22s ease,visibility .22s ease}.drawer.open{opacity:1;visibility:visible}.sheet{position:absolute;right:0;top:0;height:100%;width:min(340px,88%);background:#0b1e34;padding:22px;border-left:1px solid var(--border);box-shadow:-12px 0 30px rgba(0,0,0,.35);transform:translateX(24px);transition:transform .22s ease}.drawer.open .sheet{transform:translateX(0)}.sheet h2{margin-top:0}.menuitem{width:100%;padding:14px 8px;border:0;background:none;color:var(--text);text-align:left;font-size:15px;border-bottom:1px solid var(--border)}
+.hidden{display:none!important}
+main{animation:pageIn .24s ease both}@keyframes pageIn{from{opacity:.65;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div><div class="brand">Thai Glass Calculator</div></div>
+  <button class="menu" onclick="toggleMenu()">⋮</button>
+</header>
+
+<main id="home">
+  <div class="hero"><h1>Thai Glass Calculator</h1></div>
+  <div class="grid">
+    <button class="card action" onclick="showPage('calc')"><span class="icon">📐</span><strong>নতুন হিসাব</strong></button>
+    <button class="card action" onclick="showPage('calc');setTimeout(()=>document.getElementById('hi').focus(),80)"><span class="icon">⚡</span><strong>অটো ক্যালকুলেটর</strong></button>
+    <button class="card action" onclick="showPage('builder')"><span class="icon">🧩</span><strong>আমার ক্যালকুলেটর</strong></button>
+    <button class="card action" onclick="showPage('prices')"><span class="icon">💰</span><strong>দাম সেটিংস</strong></button>
+    <button class="card action" onclick="showPage('history')"><span class="icon">🕘</span><strong>History</strong></button>
+    <button class="card action" onclick="showPage('invoice')"><span class="icon">🧾</span><strong>Invoice</strong></button>
+  </div>
+</main>
+
+<main id="calc" class="hidden">
+<button class="back" onclick="showPage('home')">‹ Home</button>
+<div class="section-title">জানালার মাপ</div>
+<div class="card">
+  <div class="measure">
+    <div><label>Height — Inch</label><input id="hi" type="number" min="0" step="1" placeholder="54"></div>
+    <div><label>Height — Suta</label><input id="hs" type="number" min="0" max="7.5" step=".5" placeholder="2"></div>
+    <div><label>Width — Inch</label><input id="wi" type="number" min="0" step="1" placeholder="46"></div>
+    <div><label>Width — Suta</label><input id="ws" type="number" min="0" max="7.5" step=".5" placeholder="4"></div>
+  </div>
+  <div style="margin-top:14px"><button class="btn primary" onclick="calculate()">Calculate</button></div>
+</div>
+<div id="result" class="result">
+  <div class="section-title">হিসাবের ফলাফল</div>
+  <div class="card" id="rows"></div>
+  <div class="total"><small>মোট আনুমানিক খরচ</small><strong id="total">৳0</strong></div>
+  <div class="toolbar"><button class="btn secondary" onclick="window.print()">Print</button><button class="btn danger" onclick="resetCalc()">Reset</button></div>
+</div>
+</main>
+
+<main id="prices" class="hidden">
+<button class="back" onclick="showPage('home')">‹ Home</button>
+<div class="section-title">দাম সেটিংস</div>
+<div class="card"><p style="font-size:12px;color:var(--muted)">21 ft/100 ft-এর দাম বদলালে per-foot নিজে হিসাব হবে। Custom per-foot দিলে সেটি priority পাবে।</p>
+<table class="price-table"><thead><tr><th>Material</th><th>Unit</th><th>Full price</th><th>Custom/ft</th></tr></thead><tbody id="priceRows"></tbody></table>
+<div style="margin-top:14px"><button class="btn primary" onclick="savePrices()">Save Prices</button></div>
+</div>
+</main>
+<main id="builder" class="hidden"><button class="back" onclick="showPage('home')">‹ Home</button><div class="section-title">আমার ক্যালকুলেটর</div><div class="card"><div style="font-size:16px;font-weight:800;margin-bottom:8px">Advanced Builder</div><div style="color:var(--muted);font-size:13px;line-height:1.6">এখানে ভবিষ্যতে নিজের ক্যালকুলেটর, ইনপুট, মালামাল, ইউনিট ও ফর্মুলা যোগ করার সুবিধা থাকবে। এই পরীক্ষামূলক সংস্করণে Builder-এর সম্পূর্ণ ফর্মুলা-এডিটর এখনো চালু হয়নি।</div></div></main>
+<main id="history" class="hidden"><button class="back" onclick="showPage('home')">‹ Home</button><div class="section-title">History</div><div class="card" id="historyContent">এখনো কোনো হিসাব সংরক্ষিত নেই।</div></main>
+<main id="invoice" class="hidden"><button class="back" onclick="showPage('home')">‹ Home</button><div class="section-title">Invoice</div><div class="card">Invoice-এর প্রিন্ট/বিল ফিচার পরবর্তী আপডেটে সম্পূর্ণ করা হবে। আপাতত হিসাবের ফলাফল থেকে Print ব্যবহার করতে পারবে।</div></main>
+</div>
+
+<div id="drawer" class="drawer" onclick="if(event.target===this)toggleMenu()"><div class="sheet"><h2>Menu</h2>
+<button class="menuitem" onclick="showPage('home');toggleMenu()">🏠 Home</button>
+<button class="menuitem" onclick="showPage('calc');toggleMenu()">📐 New Calculation</button>
+<button class="menuitem" onclick="showPage('prices');toggleMenu()">⚙️ Price Settings</button>
+<button class="menuitem" onclick="showPage('history');toggleMenu()">🕘 History</button>
+<button class="menuitem" onclick="exportBackup()">💾 Backup / Restore</button>
+<button class="menuitem" onclick="alert('Thai Glass Calculator — Version 1.0')">ℹ️ About</button>
+</div></div>
+
+<script>
+const defaults=[
+["Outer Site","ft",1400,0],["Outer Top","ft",1500,0],["Outer Bottom","ft",1650,0],
+["Shuter Lock","ft",1950,0],["Shuter Inter Lock","ft",1850,0],["Shuter Top","ft",1450,0],
+["Shuter Bottom","ft",1650,0],["Rubber","ft",300,0],["Wheel","piece",80,0],["Lock","piece",130,0]
+];
+let prices=JSON.parse(localStorage.getItem("tg_prices")||"null")||defaults;
+
+function toggleMenu(){document.getElementById("drawer").classList.toggle("open")}
+function exportBackup(){const data={prices:JSON.parse(localStorage.getItem("tg_prices")||"null"),history:JSON.parse(localStorage.getItem("tg_history")||"[]")};const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="thai-glass-backup.json";a.click();URL.revokeObjectURL(a.href);toggleMenu()}
+function showPage(p){["home","calc","prices","builder","history","invoice"].forEach(x=>{const el=document.getElementById(x);if(el)el.classList.toggle("hidden",x!==p)});if(p==="prices")renderPrices();if(p==="history")renderHistory();window.scrollTo({top:0,behavior:"smooth"})}
+function renderHistory(){const el=document.getElementById("historyContent");const h=JSON.parse(localStorage.getItem("tg_history")||"[]");el.innerHTML=h.length?h.map(x=>`<div class="row"><span>${x.label}<br><small>${x.date}</small></span><b>${x.total}</b></div>`).join(""):"এখনো কোনো হিসাব সংরক্ষিত নেই।"}
+function money(n){return "৳"+Math.round(n).toLocaleString("en-US")}
+function feet(i,s){return (Number(i||0)+Number(s||0)/8)/12}
+function pricePerFt(row){return row[3] ? Number(row[3]) : Number(row[2])/(row[1]==="100"?100:21)}
+function renderPrices(){
+ const body=document.getElementById("priceRows");
+ body.innerHTML=prices.map((r,i)=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><input id="p${i}" type="number" value="${r[2]}"></td><td>${r[1]==="piece"?"—":`<input id="c${i}" type="number" value="${r[3]||""}" placeholder="Auto">`}</td></tr>`).join("");
+}
+function savePrices(){
+ prices.forEach((r,i)=>{r[2]=Number(document.getElementById("p"+i).value)||0;r[3]=Number(document.getElementById("c"+i)?.value)||0});
+ localStorage.setItem("tg_prices",JSON.stringify(prices)); alert("দামগুলো Save হয়েছে।"); renderPrices();
+}
+function calculate(){
+ const H=feet(document.getElementById("hi").value,document.getElementById("hs").value);
+ const W=feet(document.getElementById("wi").value,document.getElementById("ws").value);
+ if(!H||!W){alert("Height ও Width দিন।");return}
+ const shH=H-(1+1/8)/12;
+ const shW=(W-(5+7/8)/12)/2;
+ const lengths=[
+  2*H,
+  W-(4/8)/12,
+  W-(4/8)/12,
+  2*shH,
+  2*shH,
+  2*shW,
+  2*shW,
+  2*(2*shH+2*shW)
+ ];
+ const labels=["Outer Site","Outer Top","Outer Bottom","Shuter Lock","Shuter Inter Lock","Shuter Top","Shuter Bottom","Rubber"];
+ let total=0, out="";
+ labels.forEach((name,i)=>{const r=prices[i],cost=lengths[i]*pricePerFt(r);total+=cost;out+=`<div class="row"><span>${name}<br><small>${lengths[i].toFixed(2)} ft</small></span><b>${money(cost)}</b></div>`});
+ const wheel=4*prices[8][2], lock=2*prices[9][2]; total+=wheel+lock;
+ out+=`<div class="row"><span>Wheel<br><small>4 pcs</small></span><b>${money(wheel)}</b></div><div class="row"><span>Lock<br><small>2 pcs</small></span><b>${money(lock)}</b></div>`;
+ document.getElementById("rows").innerHTML=out;
+ document.getElementById("total").textContent=money(total);
+ document.getElementById("result").style.display="block";
+ const hist=JSON.parse(localStorage.getItem("tg_history")||"[]");hist.unshift({label:`জানালা ${document.getElementById("hi").value}″ × ${document.getElementById("wi").value}″`,date:new Date().toLocaleString("bn-BD"),total:money(total)});localStorage.setItem("tg_history",JSON.stringify(hist.slice(0,50)));
+}
+function resetCalc(){["hi","hs","wi","ws"].forEach(id=>document.getElementById(id).value="");document.getElementById("result").style.display="none"}
+renderPrices();
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
